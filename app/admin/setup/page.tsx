@@ -100,7 +100,7 @@ export default function SetupPage() {
           <Button
             onClick={handleSetupDatabase}
             disabled={loading || success}
-            className="w-full bg-iguana hover:bg-iguana-dark"
+            className="w-full bg-native hover:bg-native-dark"
           >
             {loading ? "Setting up..." : "Set Up Database"}
           </Button>

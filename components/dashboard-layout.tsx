@@ -21,7 +21,7 @@ export function DashboardLayout({ children, title, description }: DashboardLayou
   if (loading) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-iguana" />
+        <Loader2 className="h-8 w-8 animate-spin text-native" />
       </div>
     )
   }
@@ -40,7 +40,7 @@ export function DashboardLayout({ children, title, description }: DashboardLayou
                 <Button asChild variant="outline" className="w-full sm:w-auto">
                   <Link href="/login">Log in</Link>
                 </Button>
-                <Button asChild className="w-full sm:w-auto bg-iguana hover:bg-iguana-dark">
+                <Button asChild className="w-full sm:w-auto bg-native hover:bg-native-dark">
                   <Link href="/signup">Sign up</Link>
                 </Button>
               </div>

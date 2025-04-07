@@ -26,7 +26,7 @@ export type Transaction = {
   createdAt: string
 }
 
-export type ModelType = "iguana-fast" | "iguana-sketch" | "iguana-pro"
+export type ModelType = "vivid-fast" | "vivid-sketch" | "vivid-pro"
 
 export type ModelInfo = {
   id: ModelType

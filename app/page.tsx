@@ -16,7 +16,7 @@ export default function Home() {
                 Transform your ideas into beautiful visuals with our advanced AI image generation models.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button asChild size="lg" className="bg-iguana hover:bg-iguana-dark">
+                <Button asChild size="lg" className="bg-native hover:bg-native-dark">
                   <Link href="/playground">Start Creating</Link>
                 </Button>
                 <Button asChild size="lg" variant="outline">
@@ -79,7 +79,7 @@ export default function Home() {
             {MODELS.map((model) => (
               <div
                 key={model.id}
-                className="bg-white rounded-lg shadow-md p-6 border border-gray-100 hover:border-iguana transition-all"
+                className="bg-white rounded-lg shadow-md p-6 border border-gray-100 hover:border-native transition-all"
               >
                 <div className="text-3xl mb-4">{model.icon}</div>
                 <h3 className="text-xl font-bold mb-2">{model.name}</h3>
@@ -97,7 +97,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 md:px-6 bg-iguana text-white">
+      <section className="py-20 px-4 md:px-6 bg-native text-white">
         <div className="container mx-auto max-w-6xl text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to create amazing images?</h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">

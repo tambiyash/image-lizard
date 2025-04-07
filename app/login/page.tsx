@@ -79,7 +79,7 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <Link href="/forgot-password" className="text-sm text-iguana hover:underline">
+                <Link href="/forgot-password" className="text-sm text-native hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -93,7 +93,7 @@ export default function LoginPage() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full bg-iguana hover:bg-iguana-dark" disabled={loading}>
+            <Button type="submit" className="w-full bg-native hover:bg-native-dark" disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -105,7 +105,7 @@ export default function LoginPage() {
             </Button>
             <div className="text-center text-sm">
               Don&apos;t have an account?{" "}
-              <Link href="/signup" className="text-iguana hover:underline">
+              <Link href="/signup" className="text-native hover:underline">
                 Sign up
               </Link>
             </div>

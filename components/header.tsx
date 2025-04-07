@@ -33,8 +33,8 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-iguana",
-                  pathname === item.href ? "text-iguana" : "text-muted-foreground",
+                  "text-sm font-medium transition-colors hover:text-native",
+                  pathname === item.href ? "text-native" : "text-muted-foreground",
                 )}
               >
                 {item.name}
@@ -49,7 +49,7 @@ export function Header() {
             <>
               <div className="hidden md:flex items-center gap-1 text-sm font-medium">
                 <span className="text-muted-foreground">Credits:</span>
-                <span className="text-iguana">{user.credits}</span>
+                <span className="text-native">{user.credits}</span>
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -98,7 +98,7 @@ export function Header() {
               <Button variant="ghost" asChild>
                 <Link href="/login">Log in</Link>
               </Button>
-              <Button asChild className="bg-iguana hover:bg-iguana-dark">
+              <Button asChild className="bg-native hover:bg-native-dark">
                 <Link href="/signup">Sign up</Link>
               </Button>
             </>

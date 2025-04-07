@@ -13,7 +13,7 @@ type ModelParams = {
 
 // Map our model types to Fal.ai models with appropriate parameters
 const MODEL_CONFIG: ModelParams = {
-  "iguana-fast": {
+  "vivid-fast": {
     modelId: "fast-sdxl",
     params: {
       width: 1024,
@@ -21,7 +21,7 @@ const MODEL_CONFIG: ModelParams = {
       num_inference_steps: 15,
     },
   },
-  "iguana-sketch": {
+  "vivid-sketch": {
     modelId: "playground-v25",
     params: {
       width: 1024,
@@ -30,7 +30,7 @@ const MODEL_CONFIG: ModelParams = {
       guidance_scale: 3,
     },
   },
-  "iguana-pro": {
+  "vivid-pro": {
     modelId: "stable-diffusion-v35-large",
     params: {
       width: 1024,
@@ -57,9 +57,9 @@ export async function POST(request: Request) {
     let enhancedPrompt = prompt
     if (autoEnhance) {
       const enhancementsByModel: Record<ModelType, string> = {
-        "iguana-fast": "high quality, detailed, professional photography, sharp focus",
-        "iguana-sketch": "detailed sketch, fine lines, professional illustration, concept art",
-        "iguana-pro": "ultra-realistic, cinematic lighting, 8k resolution, professional photography, detailed textures",
+        "vivid-fast": "high quality, detailed, professional photography, sharp focus",
+        "vivid-sketch": "detailed sketch, fine lines, professional illustration, concept art",
+        "vivid-pro": "ultra-realistic, cinematic lighting, 8k resolution, professional photography, detailed textures",
       }
 
       enhancedPrompt = `${prompt} (${enhancementsByModel[model as ModelType]})`

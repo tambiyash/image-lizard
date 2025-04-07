@@ -16,15 +16,15 @@ export function CreditPackageCard({ package: pkg, onSelect, isSelected }: Credit
   return (
     <Card
       className={cn(
-        "flex flex-col transition-all hover:border-iguana",
-        (isSelected) && "border-2 border-iguana",
+        "flex flex-col transition-all hover:border-native",
+        (isSelected) && "border-2 border-native",
       )}
       onClick={() => onSelect(pkg)}
     >
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>{pkg.name}</CardTitle>
-          {pkg.popular && <Badge className="bg-iguana text-white">Popular</Badge>}
+          {pkg.popular && <Badge className="bg-native text-white">Popular</Badge>}
         </div>
         <CardDescription>{pkg.credits} credits</CardDescription>
       </CardHeader>
@@ -38,7 +38,7 @@ export function CreditPackageCard({ package: pkg, onSelect, isSelected }: Credit
         <Button
           className={cn(
             "w-full",
-            isSelected ? "bg-iguana-dark hover:bg-iguana-dark" : "bg-iguana hover:bg-iguana-dark",
+            isSelected ? "bg-native-dark hover:bg-native-dark" : "bg-native hover:bg-native-dark",
           )}
           onClick={(e) => {
             e.stopPropagation() // Prevent card click from triggering

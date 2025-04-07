@@ -14,7 +14,7 @@ interface ModelCardProps {
 export function ModelCard({ model, selected, onClick }: ModelCardProps) {
   return (
     <Card
-      className={cn("cursor-pointer transition-all hover:border-iguana", selected && "border-2 border-iguana")}
+      className={cn("cursor-pointer transition-all hover:border-native", selected && "border-2 border-native")}
       onClick={onClick}
     >
       <CardHeader>

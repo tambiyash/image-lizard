@@ -26,7 +26,7 @@ export default function PlaygroundPage() {
   const { user, updateCredits } = useAuth()
   const router = useRouter()
   const [prompt, setPrompt] = useState("")
-  const [selectedModel, setSelectedModel] = useState<ModelType>("iguana-fast")
+  const [selectedModel, setSelectedModel] = useState<ModelType>("vivid-fast")
   const [autoEnhance, setAutoEnhance] = useState(false)
   const [imageCount, setImageCount] = useState("1")
   const [generating, setGenerating] = useState(false)
@@ -145,7 +145,7 @@ export default function PlaygroundPage() {
     // Create a temporary link element
     const link = document.createElement("a")
     link.href = imageData
-    link.download = `iguana-image-${Date.now()}-${index}.png`
+    link.download = `vivid-image-${Date.now()}-${index}.png`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -268,7 +268,7 @@ export default function PlaygroundPage() {
 
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
               <div className="text-sm">
-                Cost: <span className="font-medium text-iguana">{totalCost} credits</span>
+                Cost: <span className="font-medium text-native">{totalCost} credits</span>
                 {user && <span className="text-muted-foreground ml-2">(You have {user.credits} credits)</span>}
               </div>
               {generating ? (
@@ -277,7 +277,7 @@ export default function PlaygroundPage() {
                 </Button>
               ) : (
                 <Button
-                  className="bg-iguana hover:bg-iguana-dark w-full sm:w-auto"
+                  className="bg-native hover:bg-native-dark w-full sm:w-auto"
                   disabled={!canGenerate || generating}
                   onClick={handleGenerate}
                 >
@@ -463,7 +463,7 @@ export default function PlaygroundPage() {
             <Button variant="outline" asChild className="w-full sm:w-auto">
               <Link href="/login">Log in</Link>
             </Button>
-            <Button className="bg-iguana hover:bg-iguana-dark w-full sm:w-auto" asChild>
+            <Button className="bg-native hover:bg-native-dark w-full sm:w-auto" asChild>
               <Link href="/signup">Sign up</Link>
             </Button>
           </CardContent>

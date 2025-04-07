@@ -2,25 +2,25 @@ import type { CreditPackage, ModelInfo } from "@/types"
 
 export const MODELS: ModelInfo[] = [
   {
-    id: "iguana-fast",
-    name: "Iguana Fast",
+    id: "vivid-fast",
+    name: "Vivid Fast",
     description: "Versatile AI model optimized for rapid image generation with precise style control",
-    creditCost: 4,
+    creditCost: 1,
     icon: "⚡",
   },
   {
-    id: "iguana-sketch",
-    name: "Iguana Sketch",
+    id: "vivid-sketch",
+    name: "Vivid Sketch",
     description: "Lightning-fast AI model specialized in creating detailed concept art, sketches, and illustrations",
-    creditCost: 32,
+    creditCost: 8,
     icon: "✏️",
   },
   {
-    id: "iguana-pro",
-    name: "Iguana Pro",
+    id: "vivid-pro",
+    name: "Vivid Pro",
     description:
-      "Premium AI model delivering ultra-realistic images with exceptional detail and professional-capability",
-    creditCost: 63,
+      "Premium AI model delivering ultra-realistic images with exceptional detail and professional-quality results",
+    creditCost: 16,
     icon: "✨",
   },
 ]

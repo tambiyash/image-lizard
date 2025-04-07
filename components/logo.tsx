@@ -9,9 +9,9 @@ interface LogoProps {
 export function Logo({ className }: LogoProps) {
   return (
     <Link href="/" className={cn("flex items-center gap-2", className)}>
-      <Leaf className="h-6 w-6 text-iguana" />
+      <Leaf className="h-6 w-6 text-native" />
       <span className="font-bold text-xl">
-        Image<span className="text-iguana">Iguana</span>
+        Image<span className="text-native">Vivid</span>
       </span>
     </Link>
   )

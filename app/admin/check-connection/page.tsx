@@ -41,7 +41,7 @@ export default function CheckConnectionPage() {
         <CardContent>
           {loading ? (
             <div className="flex justify-center py-4">
-              <Loader2 className="h-8 w-8 animate-spin text-iguana" />
+              <Loader2 className="h-8 w-8 animate-spin text-native" />
             </div>
           ) : (
             <>
@@ -78,7 +78,7 @@ export default function CheckConnectionPage() {
           )}
         </CardContent>
         <CardFooter>
-          <Button onClick={checkConnection} disabled={loading} className="w-full bg-iguana hover:bg-iguana-dark">
+          <Button onClick={checkConnection} disabled={loading} className="w-full bg-native hover:bg-native-dark">
             {loading ? "Checking..." : "Check Connection Again"}
           </Button>
         </CardFooter>

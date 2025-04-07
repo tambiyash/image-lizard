@@ -52,7 +52,7 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        iguana: {
+        native: {
           DEFAULT: "#10b981", // Emerald green for our brand
           light: "#34d399",
           dark: "#059669",

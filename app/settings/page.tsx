@@ -143,7 +143,7 @@ export default function SettingsPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button type="submit" className="bg-iguana hover:bg-iguana-dark" disabled={isLoading}>
+                <Button type="submit" className="bg-native hover:bg-native-dark" disabled={isLoading}>
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -212,7 +212,7 @@ export default function SettingsPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button type="submit" className="bg-iguana hover:bg-iguana-dark" disabled={isLoading}>
+                <Button type="submit" className="bg-native hover:bg-native-dark" disabled={isLoading}>
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />

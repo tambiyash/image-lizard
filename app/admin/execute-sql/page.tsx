@@ -93,7 +93,7 @@ export default function ExecuteSqlPage() {
           )}
         </CardContent>
         <CardFooter>
-          <Button onClick={executeSql} disabled={loading || !sql.trim()} className="bg-iguana hover:bg-iguana-dark">
+          <Button onClick={executeSql} disabled={loading || !sql.trim()} className="bg-native hover:bg-native-dark">
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

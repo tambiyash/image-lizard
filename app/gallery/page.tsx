@@ -67,14 +67,14 @@ export default function GalleryPage() {
       <Tabs defaultValue="all" className="mb-8">
         <TabsList>
           <TabsTrigger value="all">All Images</TabsTrigger>
-          <TabsTrigger value="iguana-fast">Iguana Fast</TabsTrigger>
-          <TabsTrigger value="iguana-sketch">Iguana Sketch</TabsTrigger>
-          <TabsTrigger value="iguana-pro">Iguana Pro</TabsTrigger>
+          <TabsTrigger value="vivid-fast">Vivid Fast</TabsTrigger>
+          <TabsTrigger value="vivid-sketch">Vivid Sketch</TabsTrigger>
+          <TabsTrigger value="vivid-pro">Vivid Pro</TabsTrigger>
         </TabsList>
         <TabsContent value="all">
           {loading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-iguana" />
+              <Loader2 className="h-8 w-8 animate-spin text-native" />
             </div>
           ) : images.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -87,7 +87,7 @@ export default function GalleryPage() {
               <CardContent className="p-6 text-center">
                 <h3 className="text-lg font-medium mb-2">No images yet</h3>
                 <p className="text-muted-foreground mb-4">Head over to the Playground to create your first image.</p>
-                <Button asChild className="bg-iguana hover:bg-iguana-dark">
+                <Button asChild className="bg-native hover:bg-native-dark">
                   <Link href="/playground">
                     <Sparkles className="h-4 w-4 mr-2" />
                     Create Image
@@ -97,28 +97,28 @@ export default function GalleryPage() {
             </Card>
           )}
         </TabsContent>
-        <TabsContent value="iguana-fast">
+        <TabsContent value="vivid-fast">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {images
-              .filter((image) => image.model === "iguana-fast")
+              .filter((image) => image.model === "vivid-fast")
               .map((image) => (
                 <ImageCard key={image.id} image={image} />
               ))}
           </div>
         </TabsContent>
-        <TabsContent value="iguana-sketch">
+        <TabsContent value="vivid-sketch">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {images
-              .filter((image) => image.model === "iguana-sketch")
+              .filter((image) => image.model === "vivid-sketch")
               .map((image) => (
                 <ImageCard key={image.id} image={image} />
               ))}
           </div>
         </TabsContent>
-        <TabsContent value="iguana-pro">
+        <TabsContent value="vivid-pro">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {images
-              .filter((image) => image.model === "iguana-pro")
+              .filter((image) => image.model === "vivid-pro")
               .map((image) => (
                 <ImageCard key={image.id} image={image} />
               ))}

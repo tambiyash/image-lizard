@@ -22,7 +22,7 @@ export function ImageCard({ image }: ImageCardProps) {
     // Create a temporary link element
     const link = document.createElement("a")
     link.href = image.imageUrl
-    link.download = `iguana-image-${Date.now()}.png`
+    link.download = `vivid-image-${Date.now()}.png`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
