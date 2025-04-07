@@ -5,11 +5,13 @@ export async function createCheckoutSession(userId: string, creditPackage: Credi
   // In a real implementation, this would call your API endpoint
   // which would then create a Stripe checkout session
 
-  // For demo purposes, we'll just return a mock session ID
+  // For demo purposes, we'll just return a mock session ID with the package ID
+  const sessionId = `cs_test_${Math.random().toString(36).substring(2, 15)}`
+
   return {
     success: true,
-    sessionId: `cs_test_${Math.random().toString(36).substring(2, 15)}`,
-    url: `/checkout/success?session_id=cs_test_${Math.random().toString(36).substring(2, 15)}`,
+    sessionId: sessionId,
+    url: `/checkout/success?session_id=${sessionId}&package_id=${creditPackage.id}`,
   }
 }
 

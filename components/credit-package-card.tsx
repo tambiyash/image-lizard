@@ -9,11 +9,18 @@ import { cn } from "@/lib/utils"
 interface CreditPackageCardProps {
   package: CreditPackage
   onSelect: (pkg: CreditPackage) => void
+  isSelected: boolean
 }
 
-export function CreditPackageCard({ package: pkg, onSelect }: CreditPackageCardProps) {
+export function CreditPackageCard({ package: pkg, onSelect, isSelected }: CreditPackageCardProps) {
   return (
-    <Card className={cn("flex flex-col transition-all hover:border-iguana", pkg.popular && "border-2 border-iguana")}>
+    <Card
+      className={cn(
+        "flex flex-col transition-all hover:border-iguana",
+        (isSelected) && "border-2 border-iguana",
+      )}
+      onClick={() => onSelect(pkg)}
+    >
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>{pkg.name}</CardTitle>
@@ -28,8 +35,17 @@ export function CreditPackageCard({ package: pkg, onSelect }: CreditPackageCardP
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full bg-iguana hover:bg-iguana-dark" onClick={() => onSelect(pkg)}>
-          Select
+        <Button
+          className={cn(
+            "w-full",
+            isSelected ? "bg-iguana-dark hover:bg-iguana-dark" : "bg-iguana hover:bg-iguana-dark",
+          )}
+          onClick={(e) => {
+            e.stopPropagation() // Prevent card click from triggering
+            onSelect(pkg)
+          }}
+        >
+          {isSelected ? "Selected" : "Select"}
         </Button>
       </CardFooter>
     </Card>

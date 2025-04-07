@@ -19,10 +19,8 @@ export function Header() {
   const { user, loading, signOut } = useAuth()
   const pathname = usePathname()
 
-  const navItems = [
-    { name: "Playground", href: "/playground" },
-    { name: "Gallery", href: "/gallery" },
-  ]
+  // Simplified navigation - only show Playground
+  const navItems = [{ name: "Playground", href: "/playground" }]
 
   return (
     <header className="border-b">

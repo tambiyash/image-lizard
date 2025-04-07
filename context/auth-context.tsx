@@ -180,12 +180,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateCredits = async (newCredits: number) => {
     if (!user) return
 
-    setUser({ ...user, credits: newCredits })
+    try {
+      const { error } = await supabase.from("profiles").update({ credits: newCredits }).eq("id", user.id)
 
-    const { error } = await supabase.from("profiles").update({ credits: newCredits }).eq("id", user.id)
+      if (error) {
+        console.error("Error updating credits:", error)
+        throw error
+      }
 
-    if (error) {
-      console.error("Error updating credits:", error)
+      // Only update the local state after successful DB update
+      setUser({ ...user, credits: newCredits })
+      console.log("Credits updated successfully:", newCredits)
+
+      return true
+    } catch (error) {
+      console.error("Failed to update credits:", error)
+      return false
     }
   }
 
