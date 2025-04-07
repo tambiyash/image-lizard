@@ -21,13 +21,14 @@ import { AlertCircle } from "lucide-react"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Progress } from "@/components/ui/progress"
+import { ImageSkeleton } from "@/components/image-skeleton"
 
 export default function PlaygroundPage() {
   const { user, updateCredits } = useAuth()
   const router = useRouter()
   const [prompt, setPrompt] = useState("")
   const [selectedModel, setSelectedModel] = useState<ModelType>("vivid-fast")
-  const [autoEnhance, setAutoEnhance] = useState(false)
+  const [autoEnhance, setAutoEnhance] = useState(true)
   const [imageCount, setImageCount] = useState("1")
   const [generating, setGenerating] = useState(false)
   const [generatedImages, setGeneratedImages] = useState<string[]>([])
@@ -40,7 +41,14 @@ export default function PlaygroundPage() {
   const totalCost = selectedModelInfo.creditCost * Number.parseInt(imageCount)
   const canGenerate = user && user.credits >= totalCost && prompt.trim().length > 0
 
-  // Update the handleGenerate function to properly handle credits
+  // Calculate the number of skeleton placeholders to show
+  const skeletonCount = generating ? Number.parseInt(imageCount) : 0
+
+  // Create an array of skeleton placeholders
+  const skeletonPlaceholders = Array.from({ length: skeletonCount }).map((_, index) => (
+    <ImageSkeleton key={`skeleton-${index}`} />
+  ))
+
   const handleGenerate = async () => {
     if (!user) {
       router.push("/login")
@@ -298,12 +306,17 @@ export default function PlaygroundPage() {
           </CardContent>
         </Card>
 
-        {generatedImages.length > 0 && (
+        {/* Show either skeletons or generated images */}
+        {(generating || generatedImages.length > 0) && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Generated Images</h2>
+            <h2 className="text-2xl font-bold">{generating ? "Generating Images..." : "Generated Images"}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Show skeleton placeholders while generating */}
+              {generating && skeletonPlaceholders}
+
+              {/* Show generated images once available */}
               {generatedImages.map((imageData, index) => (
-                <Card key={index} className="overflow-hidden">
+                <Card key={`image-${index}`} className="overflow-hidden">
                   <CardContent className="p-0">
                     <div className="relative aspect-square">
                       <Image
@@ -311,7 +324,7 @@ export default function PlaygroundPage() {
                         alt={`Generated image ${index + 1}`}
                         fill
                         className="object-cover"
-                        unoptimized={true} // Add unoptimized prop for data URLs
+                        unoptimized={true}
                       />
                       <div className="absolute top-2 right-2 flex gap-2">
                         <Button

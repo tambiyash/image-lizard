@@ -53,6 +53,7 @@ export function DashboardLayout({ children, title, description }: DashboardLayou
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
+      {/* Hide sidebar on mobile, show on medium screens and up */}
       <div className="hidden md:block w-64 border-r">
         <Sidebar />
       </div>

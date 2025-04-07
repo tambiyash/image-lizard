@@ -16,6 +16,7 @@ export default function DashboardPage() {
   const [recentImages, setRecentImages] = useState<ImageType[]>([])
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
+  const [transactionsLoading, setTransactionsLoading] = useState(true)
 
   const fetchRecentImages = async () => {
     if (!user) {
@@ -38,6 +39,8 @@ export default function DashboardPage() {
           createdAt: item.created_at,
         }))
 
+        console.log("Fetched images for dashboard:", formattedImages.length)
+
         // Sort by date and take the most recent 4
         const sortedImages = formattedImages
           .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
@@ -54,30 +57,42 @@ export default function DashboardPage() {
     }
   }
 
-  // For demo purposes, let's create some mock transactions
-  // In a real app, you would fetch these from the database
-  const fetchTransactions = () => {
-    if (user) {
-      const mockTransactions: Transaction[] = [
-        {
-          id: "txn-1",
-          userId: user.id,
-          amount: 12,
-          credits: 150,
-          status: "completed",
-          createdAt: new Date(Date.now() - 7 * 86400000).toISOString(),
-        },
-        {
-          id: "txn-2",
-          userId: user.id,
-          amount: 5,
-          credits: 50,
-          status: "completed",
-          createdAt: new Date(Date.now() - 14 * 86400000).toISOString(),
-        },
-      ]
+  const fetchTransactions = async () => {
+    if (!user) {
+      setTransactionsLoading(false)
+      return
+    }
 
-      setTransactions(mockTransactions)
+    try {
+      const response = await fetch(`/api/transactions?userId=${user.id}`)
+      const result = await response.json()
+
+      if (result.success && result.data) {
+        const formattedTransactions: Transaction[] = result.data.map((item: any) => ({
+          id: item.id,
+          userId: item.user_id,
+          amount: item.amount,
+          credits: item.credits,
+          status: item.status,
+          paymentIntent: item.payment_intent,
+          createdAt: item.created_at,
+        }))
+
+        console.log("Fetched transactions for dashboard:", formattedTransactions.length)
+
+        // Sort by date and take the most recent ones
+        const sortedTransactions = formattedTransactions
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .slice(0, 5)
+
+        setTransactions(sortedTransactions)
+      } else {
+        console.error("Error fetching transactions:", result.error)
+      }
+    } catch (error) {
+      console.error("Error fetching transactions:", error)
+    } finally {
+      setTransactionsLoading(false)
     }
   }
 
@@ -94,8 +109,8 @@ export default function DashboardPage() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Available Credits</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-iguana">{user?.credits}</div>
-            <Button asChild variant="link" className="p-0 h-auto text-iguana">
+            <div className="text-3xl font-bold text-native">{user?.credits}</div>
+            <Button asChild variant="link" className="p-0 h-auto text-native">
               <Link href="/credits">
                 <Plus className="h-4 w-4 mr-1" />
                 Buy more credits
@@ -140,7 +155,7 @@ export default function DashboardPage() {
 
           {loading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-iguana" />
+              <Loader2 className="h-8 w-8 animate-spin text-native" />
             </div>
           ) : recentImages.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -153,7 +168,7 @@ export default function DashboardPage() {
               <CardContent className="p-6 text-center">
                 <h3 className="text-lg font-medium mb-2">No images yet</h3>
                 <p className="text-muted-foreground mb-4">Head over to the Playground to create your first image.</p>
-                <Button asChild className="bg-iguana hover:bg-iguana-dark">
+                <Button asChild className="bg-native hover:bg-native-dark">
                   <Link href="/playground">
                     <Sparkles className="h-4 w-4 mr-2" />
                     Create Image
@@ -174,7 +189,11 @@ export default function DashboardPage() {
 
           <Card>
             <CardContent className="p-0">
-              {transactions.length > 0 ? (
+              {transactionsLoading ? (
+                <div className="flex justify-center py-12">
+                  <Loader2 className="h-8 w-8 animate-spin text-native" />
+                </div>
+              ) : transactions.length > 0 ? (
                 <div className="divide-y">
                   {transactions.map((transaction) => (
                     <div key={transaction.id} className="flex items-center justify-between p-4">
@@ -198,7 +217,7 @@ export default function DashboardPage() {
                 <div className="p-6 text-center">
                   <h3 className="text-lg font-medium mb-2">No transactions yet</h3>
                   <p className="text-muted-foreground mb-4">Purchase credits to generate images.</p>
-                  <Button asChild className="bg-iguana hover:bg-iguana-dark">
+                  <Button asChild className="bg-native hover:bg-native-dark">
                     <Link href="/credits">
                       <CreditCard className="h-4 w-4 mr-2" />
                       Buy Credits

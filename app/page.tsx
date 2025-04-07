@@ -27,7 +27,7 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-4">
               <div className="aspect-square rounded-lg overflow-hidden">
                 <Image
-                  src="/placeholder.svg?height=400&width=400"
+                  src="/diffusion.jpeg?height=400&width=400"
                   alt="AI generated image"
                   width={400}
                   height={400}
@@ -36,7 +36,7 @@ export default function Home() {
               </div>
               <div className="aspect-square rounded-lg overflow-hidden">
                 <Image
-                  src="/placeholder.svg?height=400&width=400"
+                  src="/mountains.png?height=400&width=400"
                   alt="AI generated image"
                   width={400}
                   height={400}
@@ -45,7 +45,7 @@ export default function Home() {
               </div>
               <div className="aspect-square rounded-lg overflow-hidden">
                 <Image
-                  src="/placeholder.svg?height=400&width=400"
+                  src="/skeleton.png?height=400&width=400"
                   alt="AI generated image"
                   width={400}
                   height={400}
@@ -54,7 +54,7 @@ export default function Home() {
               </div>
               <div className="aspect-square rounded-lg overflow-hidden">
                 <Image
-                  src="/placeholder.svg?height=400&width=400"
+                  src="/coral.jpeg?height=400&width=400"
                   alt="AI generated image"
                   width={400}
                   height={400}

@@ -12,7 +12,8 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<void>
   signUp: (email: string, password: string, fullName: string) => Promise<void>
   signOut: () => Promise<void>
-  updateCredits: (newCredits: number) => Promise<boolean|undefined>;
+  updateCredits: (newCredits: number) => Promise<boolean>
+  refreshUserData: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -35,6 +36,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error("Exception fetching user profile:", error)
       return null
+    }
+  }
+
+  // Function to refresh user data
+  const refreshUserData = async () => {
+    try {
+      console.log("Refreshing user data...")
+
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession()
+
+      if (sessionError) {
+        console.error("Error getting session during refresh:", sessionError)
+        return
+      }
+
+      if (!session) {
+        console.log("No session found during refresh")
+        return
+      }
+
+      console.log("Session found during refresh:", session.user.id)
+
+      const profile = await fetchUserProfile(session.user.id)
+
+      if (profile) {
+        console.log("Profile found during refresh:", profile)
+        console.log("Current credits:", profile.credits)
+
+        setUser({
+          id: profile.id,
+          email: session.user.email!,
+          username: profile.username,
+          fullName: profile.full_name,
+          credits: profile.credits,
+          createdAt: profile.created_at,
+        })
+        console.log("User profile refreshed:", profile.id)
+      } else {
+        console.error("No profile found for user during refresh:", session.user.id)
+      }
+    } catch (error) {
+      console.error("Error in refreshUserData:", error)
     }
   }
 
@@ -177,8 +223,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log("Signed out successfully")
   }
 
-  const updateCredits = async (newCredits: number) => {
-    if (!user) return
+  const updateCredits = async (newCredits: number): Promise<boolean> => {
+    if (!user) return false
 
     try {
       const { error } = await supabase.from("profiles").update({ credits: newCredits }).eq("id", user.id)
@@ -200,7 +246,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, updateCredits }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, updateCredits, refreshUserData }}>
       {children}
     </AuthContext.Provider>
   )

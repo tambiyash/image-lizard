@@ -15,6 +15,8 @@ export async function createCheckoutSession(userId: string, creditPackage: Credi
   }
 }
 
+// This function is no longer needed as we're handling this in the API
+// Keeping it for backward compatibility
 export async function processPayment(sessionId: string) {
   // In a real implementation, this would verify the payment with Stripe
   // and update the user's credits in the database

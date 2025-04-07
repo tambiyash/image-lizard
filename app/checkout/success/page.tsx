@@ -1,17 +1,16 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useAuth } from "@/context/auth-context"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { processPayment } from "@/lib/payment-service"
 import { CheckCircle2, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { CREDIT_PACKAGES } from "@/lib/constants"
 
 export default function CheckoutSuccessPage() {
-  const { user, updateCredits } = useAuth()
+  const { user, refreshUserData } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
   const sessionId = searchParams.get("session_id")
@@ -22,16 +21,31 @@ export default function CheckoutSuccessPage() {
   const [processed, setProcessed] = useState(false)
   const [newTotalCredits, setNewTotalCredits] = useState(0)
 
+  // Use a ref to track if the payment has been processed
+  const hasProcessedRef = useRef(false)
+
   useEffect(() => {
-    if (!sessionId || !user || !packageId) {
+    // Redirect if missing parameters
+    if (!sessionId || !packageId) {
       router.push("/credits")
       return
     }
 
-    // Only process the payment once
-    if (processed) return
+    // Redirect if no user
+    if (!user) {
+      router.push("/login")
+      return
+    }
+
+    // Prevent duplicate processing
+    if (hasProcessedRef.current || processed) {
+      return
+    }
 
     const completePayment = async () => {
+      // Set the ref immediately to prevent concurrent calls
+      hasProcessedRef.current = true
+
       try {
         // Find the selected package
         const selectedPackage = CREDIT_PACKAGES.find((pkg) => pkg.id === packageId)
@@ -42,33 +56,53 @@ export default function CheckoutSuccessPage() {
           return
         }
 
-        const result = await processPayment(sessionId)
+        console.log("Processing payment for package:", selectedPackage)
+
+        // Create a transaction record in Supabase
+        const response = await fetch("/api/transactions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            amount: selectedPackage.price,
+            credits: selectedPackage.credits,
+            paymentIntent: `session_${sessionId}`,
+          }),
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.error || "Failed to process transaction")
+        }
+
+        const result = await response.json()
 
         if (result.success) {
-          // Calculate new credit total
-          const packageCredits = selectedPackage.credits
-          const newCredits = user.credits + packageCredits
-
-          // Update user credits
-          await updateCredits(newCredits)
+          console.log("Transaction created successfully:", result.data)
 
           // Set state for display
-          setCredits(packageCredits)
-          setNewTotalCredits(newCredits)
+          setCredits(selectedPackage.credits)
+          setNewTotalCredits(result.data.newCreditBalance)
           setProcessed(true)
+
+          // Refresh user data to get updated credit balance
+          await refreshUserData()
         } else {
-          setError("Failed to process payment. Please contact support.")
+          console.error("Failed to create transaction:", result.error)
+          throw new Error(result.error || "Failed to process payment")
         }
       } catch (error) {
         console.error("Error processing payment:", error)
-        setError("An error occurred while processing your payment.")
+        setError(error instanceof Error ? error.message : "An error occurred while processing your payment.")
       } finally {
         setLoading(false)
       }
     }
 
     completePayment()
-  }, [sessionId, user, router, updateCredits, packageId, processed])
+  }, [sessionId, user, router, packageId, processed, refreshUserData])
 
   if (loading) {
     return (
@@ -79,7 +113,7 @@ export default function CheckoutSuccessPage() {
             <CardDescription>Please wait while we process your payment...</CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center py-6">
-            <Loader2 className="h-12 w-12 animate-spin text-iguana" />
+            <Loader2 className="h-12 w-12 animate-spin text-native" />
           </CardContent>
         </Card>
       </div>
@@ -115,12 +149,12 @@ export default function CheckoutSuccessPage() {
           <CardDescription>Thank you for your purchase. Your credits have been added to your account.</CardDescription>
         </CardHeader>
         <CardContent className="text-center py-6">
-          <div className="text-4xl font-bold text-iguana mb-2">+{credits}</div>
+          <div className="text-4xl font-bold text-native mb-2">+{credits}</div>
           <p className="text-muted-foreground">Credits added to your account</p>
           <p className="mt-4 font-medium">New balance: {newTotalCredits} credits</p>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <Button asChild className="w-full bg-iguana hover:bg-iguana-dark">
+          <Button asChild className="w-full bg-native hover:bg-native-dark">
             <Link href="/playground">Start Creating</Link>
           </Button>
           <Button asChild variant="outline" className="w-full">

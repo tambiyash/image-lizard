@@ -13,20 +13,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { CreditCard, Loader2, LogOut, Settings, User } from "lucide-react"
+import { Loader2, LogOut, User } from "lucide-react"
+import { MobileNav } from "@/components/mobile-nav"
 
 export function Header() {
   const { user, loading, signOut } = useAuth()
   const pathname = usePathname()
 
-  // Simplified navigation - only show Playground
+  // Simplified navigation - only show Playground in the top nav
   const navItems = [{ name: "Playground", href: "/playground" }]
 
   return (
     <header className="border-b">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
-          <Logo />
+          <div className="flex items-center gap-2">
+            {user && <MobileNav />}
+            <Logo />
+          </div>
           <nav className="hidden md:flex gap-6">
             {navItems.map((item) => (
               <Link
@@ -59,32 +63,14 @@ export function Header() {
                     </div>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="w-56">
                   <div className="flex items-center justify-start gap-2 p-2">
                     <div className="flex flex-col space-y-1 leading-none">
                       <p className="font-medium">{user.fullName || user.email}</p>
                       <p className="text-xs text-muted-foreground">{user.email}</p>
                     </div>
                   </div>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/dashboard" className="cursor-pointer">
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Dashboard</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/credits" className="cursor-pointer">
-                      <CreditCard className="mr-2 h-4 w-4" />
-                      <span>Buy Credits</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/settings" className="cursor-pointer">
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
-                    </Link>
-                  </DropdownMenuItem>
+
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="cursor-pointer" onClick={() => signOut()}>
                     <LogOut className="mr-2 h-4 w-4" />

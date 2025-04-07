@@ -65,7 +65,7 @@ export default function CreditsPage() {
                 </p>
               </div>
               <Button
-                className="bg-iguana hover:bg-iguana-dark w-full md:w-auto"
+                className="bg-native hover:bg-native-dark w-full md:w-auto"
                 onClick={handleCheckout}
                 disabled={loading}
               >
