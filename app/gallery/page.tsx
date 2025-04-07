@@ -24,9 +24,17 @@ export default function GalleryPage() {
     }
 
     try {
+      console.log("Fetching images for user:", user.id)
+
       // Fetch images from the API
       const response = await fetch(`/api/images?userId=${user.id}`)
       const result = await response.json()
+
+      console.log("API response:", {
+        success: result.success,
+        dataLength: result.data ? result.data.length : 0,
+        error: result.error || "none",
+      })
 
       if (result.success && result.data) {
         const formattedImages: ImageType[] = result.data.map((item: any) => ({
@@ -38,6 +46,7 @@ export default function GalleryPage() {
           createdAt: item.created_at,
         }))
 
+        console.log("Formatted images:", formattedImages.length)
         setImages(formattedImages)
       } else {
         console.error("Error fetching images:", result.error)
@@ -52,25 +61,6 @@ export default function GalleryPage() {
   useEffect(() => {
     fetchImages()
   }, [user])
-
-  // For demo purposes, let's create some mock images if none are found
-  useEffect(() => {
-    if (images.length === 0 && !loading && user) {
-      const mockImages: ImageType[] = Array.from({ length: 8 }).map((_, i) => ({
-        id: `mock-${i}`,
-        userId: user?.id || "mock-user",
-        prompt:
-          i % 2 === 0
-            ? "A beautiful sunset over a calm ocean with palm trees in the foreground"
-            : "A futuristic cityscape with flying cars and neon lights at night",
-        model: i % 3 === 0 ? "iguana-fast" : i % 3 === 1 ? "iguana-sketch" : "iguana-pro",
-        imageUrl: `/placeholder.svg?height=512&width=512`,
-        createdAt: new Date(Date.now() - i * 86400000).toISOString(),
-      }))
-
-      setImages(mockImages)
-    }
-  }, [images.length, loading, user])
 
   return (
     <DashboardLayout title="Your Gallery">

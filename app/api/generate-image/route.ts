@@ -22,21 +22,21 @@ const MODEL_CONFIG: ModelParams = {
     },
   },
   "iguana-sketch": {
-    modelId: "recraft-v3",
+    modelId: "playground-v25",
     params: {
       width: 1024,
       height: 1024,
-      style: "sketch",
       num_inference_steps: 25,
+      guidance_scale: 3,
     },
   },
   "iguana-pro": {
-    modelId: "stable-diffusion-3.5-large",
+    modelId: "stable-diffusion-v35-large",
     params: {
       width: 1024,
       height: 1024,
       num_inference_steps: 50,
-      guidance_scale: 7.5,
+      guidance_scale: 4.5,
     },
   },
 }

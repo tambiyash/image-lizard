@@ -37,7 +37,7 @@ export async function generateImageWithAI(prompt: string, model: ModelType, auto
 // Function to save generated image to the database
 export async function saveGeneratedImage(userId: string, prompt: string, model: ModelType, imageUrl: string) {
   try {
-    const { data, error } = await fetch("/api/images", {
+    const response = await fetch("/api/images", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -48,16 +48,21 @@ export async function saveGeneratedImage(userId: string, prompt: string, model: 
         model,
         imageUrl,
       }),
-    }).then((res) => res.json())
+    })
 
-    if (error) {
-      throw new Error(error)
+    const result = await response.json()
+
+    if (!response.ok) {
+      throw new Error(result.error || "Failed to save image")
     }
 
-    return { success: true, data }
+    return { success: true, data: result.data }
   } catch (error) {
     console.error("Error saving image:", error)
-    return { success: false, error: "Failed to save image" }
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to save image",
+    }
   }
 }
 

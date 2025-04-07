@@ -15,7 +15,7 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Image from "next/image"
-import { generateImageWithAI } from "@/lib/image-service"
+import { generateImageWithAI, saveGeneratedImage } from "@/lib/image-service"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 import { DashboardLayout } from "@/components/dashboard-layout"
@@ -40,6 +40,7 @@ export default function PlaygroundPage() {
   const totalCost = selectedModelInfo.creditCost * Number.parseInt(imageCount)
   const canGenerate = user && user.credits >= totalCost && prompt.trim().length > 0
 
+  // Update the handleGenerate function to properly handle credits
   const handleGenerate = async () => {
     if (!user) {
       router.push("/login")
@@ -70,6 +71,9 @@ export default function PlaygroundPage() {
       const images = []
       const count = Number.parseInt(imageCount)
 
+      // Keep track of actual cost as we might not generate all images if aborted
+      let actualCost = 0
+
       for (let i = 0; i < count; i++) {
         // Check if the operation was aborted
         if (signal.aborted) {
@@ -89,8 +93,19 @@ export default function PlaygroundPage() {
         if (result.success && result.imageData) {
           images.push(result.imageData)
 
-          // Update progress
-          setProgress(baseProgress + progressPerImage)
+          // Save the image to the database
+          const saveResult = await saveGeneratedImage(user.id, prompt, selectedModel, result.imageData)
+
+          if (saveResult.success) {
+            // Increment actual cost only if image was successfully generated and saved
+            actualCost += selectedModelInfo.creditCost
+
+            // Update progress
+            setProgress(baseProgress + progressPerImage)
+          } else {
+            console.error("Failed to save image:", saveResult.error)
+            throw new Error(saveResult.error || "Failed to save image")
+          }
         } else {
           throw new Error(result.error || "Failed to generate image")
         }
@@ -99,18 +114,21 @@ export default function PlaygroundPage() {
       setGeneratedImages(images)
 
       // Only update credits if we successfully generated at least one image
-      if (images.length > 0) {
-        // Calculate actual cost based on how many images were successfully generated
-        const actualCost = selectedModelInfo.creditCost * images.length
-        await updateCredits(user.credits - actualCost)
+      if (images.length > 0 && actualCost > 0) {
+        const newCreditBalance = user.credits - actualCost
+        await updateCredits(newCreditBalance)
       }
     } catch (error) {
       console.error("Error generating images:", error)
       setError(error instanceof Error ? error.message : "Failed to generate images. Please try again.")
     } finally {
+      // Ensure these state updates happen
       setGenerating(false)
-      setProgress(100) // Ensure progress bar completes
+      setProgress(100)
       abortControllerRef.current = null
+
+      // Add a console log to verify this block is executed
+      console.log("Generation process completed, finally block executed")
     }
   }
 
@@ -119,6 +137,7 @@ export default function PlaygroundPage() {
       abortControllerRef.current.abort()
       setError("Image generation cancelled.")
       setGenerating(false)
+      setProgress(0)
     }
   }
 
@@ -292,6 +311,7 @@ export default function PlaygroundPage() {
                         alt={`Generated image ${index + 1}`}
                         fill
                         className="object-cover"
+                        unoptimized={true} // Add unoptimized prop for data URLs
                       />
                       <div className="absolute top-2 right-2 flex gap-2">
                         <Button
