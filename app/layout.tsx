@@ -9,7 +9,7 @@ import { Header } from "@/components/header"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "ImageLizard - AI Image Generation",
+  title: "ImageVivid - AI Image Generation",
   description: "Generate stunning images with AI",
     generator: 'v0.dev'
 }
